@@ -64,7 +64,7 @@ namespace Kev.OpenWeather.Test
             Assert.AreEqual(1, options.Value.GeneralRules.Count);
             var generalRule = options.Value.GeneralRules[0];
             Assert.AreEqual("*:/api/*", generalRule.Endpoint);
-            Assert.AreEqual("1m", generalRule.Period);
+            Assert.AreEqual("1h", generalRule.Period);
             Assert.AreEqual(5, generalRule.Limit);
         }
 
