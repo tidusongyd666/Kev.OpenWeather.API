@@ -108,7 +108,6 @@ namespace Kev.OpenWeather.API
 
             app.UseHttpsRedirection();
 
-            //app.UseIpRateLimiting();
             app.UseClientRateLimiting();
 
             app.UseRouting();
