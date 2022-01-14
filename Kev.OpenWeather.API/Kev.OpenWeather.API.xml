@@ -4,5 +4,34 @@
         <name>Kev.OpenWeather.API</name>
     </assembly>
     <members>
+        <member name="M:Kev.OpenWeather.API.Controllers.WeatherForecastController.GetWeatherbyCountryCity(System.String,System.String,System.String)">
+            <summary>
+            Get Weather Report (Note: this endpoint has enabled client rate limit 5 calls per hour for each X_ClientId)
+            </summary>
+            <remarks> Get weather report by country and city</remarks>
+            <param name="country">e.g. au</param>
+            <param name="city">e.g. brisbane</param>
+            <param name="X_ClientId">cl-key-1, cl-key-2, cl-key-3, cl-key-4, cl-key-5, cl-key-no-limit</param> 
+        </member>
+        <member name="M:Kev.OpenWeather.API.Controllers.WeatherForecastController.GetCities(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Execute Cities Search (Note: this endpoint has no client rate limit)
+            </summary>
+            <remarks>Execute cities search with pagenations</remarks>
+            <param name="search">e.g. brisbane</param>
+            <param name="page">1</param>
+            <param name="size">10</param>
+            <param name="X_ClientId">cl-key-1, cl-key-2, cl-key-3, cl-key-4, cl-key-5, cl-key-no-limit</param>   
+        </member>
+        <member name="M:Kev.OpenWeather.API.Controllers.WeatherForecastController.GetCountries(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Execute Countries Search (Note: this endpoint has no client rate limit)
+            </summary>
+            <remarks>Execute countries search with pagenations</remarks>
+            <param name="search">e.g. au</param>
+            <param name="page">1</param>
+            <param name="size">10</param>
+            <param name="X_ClientId">cl-key-1, cl-key-2, cl-key-3, cl-key-4, cl-key-5, cl-key-no-limit</param>   
+        </member>
     </members>
 </doc>

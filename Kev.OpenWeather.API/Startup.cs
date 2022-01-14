@@ -11,12 +11,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.PlatformAbstractions;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Kev.OpenWeather.API
@@ -31,6 +33,16 @@ namespace Kev.OpenWeather.API
 
         public IConfiguration Configuration { get; }
         public IWebHostEnvironment HostingEnvironment { get; }
+
+        static string XmlCommentsFilePath
+        {
+            get
+            {
+                var basePath = PlatformServices.Default.Application.ApplicationBasePath;
+                var fileName = typeof(Startup).GetTypeInfo().Assembly.GetName().Name + ".xml";
+                return Path.Combine(basePath, fileName);
+            }
+        }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -65,13 +77,22 @@ namespace Kev.OpenWeather.API
         {
             services.AddSwaggerGen(c =>
             {
-
+                
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Version = "v1",
                     Title = "Kev Open Weather API",
+                    Description = "Kev Open Weather API in ASP.NET Core Web API",
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Kev Github",
+                        Email = string.Empty,
+                        Url = new Uri("https://github.com/tidusongyd666/Kev.OpenWeather.API"),
+                    },
 
                 });
+                c.IncludeXmlComments(XmlCommentsFilePath);
+
 
                 c.OperationFilter<FileResultContentTypeOperationFilter>();
             });

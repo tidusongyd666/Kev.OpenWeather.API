@@ -30,7 +30,10 @@ namespace Kev.OpenWeather.Test
         public async Task TestCountrySearch(string search, int page, int size, int expectedCount)
         {
             using var factory = new WebApplicationFactory<Startup>();
+            var options = factory.Services.GetRequiredService<IOptions<ClientRateLimitOptions>>();
+            string unlimitedClientId = options.Value.ClientWhitelist.FirstOrDefault();
             var httpClient = factory.CreateClient();
+            httpClient.DefaultRequestHeaders.Add("X_ClientId", unlimitedClientId);
             var response = await httpClient.GetAsync($"api/v1/getweather/countries?search={search}&page={page}&size={size}");
             response.EnsureSuccessStatusCode();
             var result = await response.Content.ReadAsStringAsync();
@@ -40,12 +43,15 @@ namespace Kev.OpenWeather.Test
 
         [DataTestMethod]
         [DataRow("Melbourne", 1, 1000, 13)]
-        [DataRow("", 1, 1000, 209579)]
+        [DataRow("", 1, 999999, 209579)]
         [DataRow("wrong", 1, 10, 0)]
         public async Task TestCitySearch(string search, int page, int size, int expectedCount)
         {
             using var factory = new WebApplicationFactory<Startup>();
+            var options = factory.Services.GetRequiredService<IOptions<ClientRateLimitOptions>>();
+            string unlimitedClientId = options.Value.ClientWhitelist.FirstOrDefault();
             var httpClient = factory.CreateClient();
+            httpClient.DefaultRequestHeaders.Add("X_ClientId", unlimitedClientId);
             var response = await httpClient.GetAsync($"api/v1/getweather/cities?search={search}&page={page}&size={size}");
             response.EnsureSuccessStatusCode();
             var result = await response.Content.ReadAsStringAsync();
