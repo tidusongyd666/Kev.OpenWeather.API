@@ -4,7 +4,6 @@ using Kev.OpenWeather.Core.Features.GetWeather;
 using Kev.OpenWeather.Core.Features.Lookups.GetCities;
 using Kev.OpenWeather.Core.Features.Lookups.GetCountires;
 using Kev.OpenWeather.Core.Interfaces;
-using Kev.OpenWeather.Core.Models;
 using Kev.OpenWeather.Core.Services;
 using MediatR;
 using Microsoft.AspNetCore.Hosting;
@@ -14,9 +13,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -92,6 +88,9 @@ namespace Kev.OpenWeather.API.Controllers
             if (!ConfigManager.configRoot.GetSection("ClientIds").Get<string[]>().Contains(X_ClientId))
                 return Unauthorized(this.errorService.CreateError(ErrorCode.AuthenticationFailed));
 
+            if (page <=0 || size <=0)
+                return BadRequest(this.errorService.CreateError(ErrorCode.InputDataIsNotValid));
+
             var getCitiesForSearch = new GetCitiesForSearchQuery() { Search = search, Page = page, Size = size };
             var vms = await mediator.Send(getCitiesForSearch);
 
@@ -115,6 +114,9 @@ namespace Kev.OpenWeather.API.Controllers
         {
             if (!ConfigManager.configRoot.GetSection("ClientIds").Get<string[]>().Contains(X_ClientId))
                 return Unauthorized(this.errorService.CreateError(ErrorCode.AuthenticationFailed));
+
+            if (page <= 0 || size <= 0)
+                return BadRequest(this.errorService.CreateError(ErrorCode.InputDataIsNotValid));
 
             var getCountriesForSearch = new GetCountriesForSearchQuery() { Search = search, Page = page, Size = size };
             var vms = await mediator.Send(getCountriesForSearch);
