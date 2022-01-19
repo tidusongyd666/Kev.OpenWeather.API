@@ -45,6 +45,8 @@ This solution contains 3 projects.
 Including below automatic tests
 - TestCountrySearch
 - TestCitySearch
+- TestSearchCountryiesWithInvalidParams
+- TestSearchCitiesWithInvalidParams
 - TestClientRateLimitOptions
 - TestGetCityWeather
 - TestGetWeatherWithUnlimitedKey

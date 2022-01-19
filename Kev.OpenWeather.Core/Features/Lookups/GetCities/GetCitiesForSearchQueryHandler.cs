@@ -13,6 +13,11 @@ namespace Kev.OpenWeather.Core.Features.Lookups.GetCities
     {
         public async Task<PagedCityiesVm> Handle(GetCitiesForSearchQuery request, CancellationToken cancellationToken)
         {
+            var validator = new GetCitiesForSearchQueryValidator();
+            var validationResult = await validator.ValidateAsync(request);
+            if (validationResult.Errors.Count > 0)
+                throw new Exceptions.ValidationException(validationResult);
+
             var list = string.IsNullOrEmpty(request.Search) ?
                 ConfigManager.cityLookups
                 .Skip((request.Page - 1) * request.Size).Take(request.Size).

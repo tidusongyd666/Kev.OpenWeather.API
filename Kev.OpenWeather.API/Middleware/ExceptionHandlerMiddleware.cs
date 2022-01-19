@@ -40,7 +40,7 @@ namespace Kev.OpenWeather.API.Middleware
             switch (exception)
             {
                 case ValidationException validationException:
-                    httpStatusCode = HttpStatusCode.UnprocessableEntity;
+                    httpStatusCode = HttpStatusCode.BadRequest;
                     result = JsonConvert.SerializeObject(validationException.ValdationErrors);
                     break;
                 case NotFoundException notFoundException:

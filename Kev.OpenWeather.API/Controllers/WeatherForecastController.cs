@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -81,15 +82,12 @@ namespace Kev.OpenWeather.API.Controllers
         [HttpGet("getweather/cities", Name = "getcities")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PagedCityiesVm))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ErrorDto))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorDto))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(List<string>))]
         [ProducesDefaultResponseType]
         public async Task<ActionResult<PagedCityiesVm>> GetCities([FromHeader] string X_ClientId, int page = 1, int size = 10, string search = "")
         {
             if (!ConfigManager.configRoot.GetSection("ClientIds").Get<string[]>().Contains(X_ClientId))
                 return Unauthorized(this.errorService.CreateError(ErrorCode.AuthenticationFailed));
-
-            if (page <=0 || size <=0)
-                return BadRequest(this.errorService.CreateError(ErrorCode.InputDataIsNotValid));
 
             var getCitiesForSearch = new GetCitiesForSearchQuery() { Search = search, Page = page, Size = size };
             var vms = await mediator.Send(getCitiesForSearch);
@@ -108,15 +106,12 @@ namespace Kev.OpenWeather.API.Controllers
         [HttpGet("getweather/countries", Name = "getcountries")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PagedCountriesVm))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ErrorDto))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorDto))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(List<string>))]
         [ProducesDefaultResponseType]
         public async Task<ActionResult<PagedCountriesVm>> GetCountries([FromHeader] string X_ClientId, int page = 1, int size = 10, string search = "")
         {
             if (!ConfigManager.configRoot.GetSection("ClientIds").Get<string[]>().Contains(X_ClientId))
                 return Unauthorized(this.errorService.CreateError(ErrorCode.AuthenticationFailed));
-
-            if (page <= 0 || size <= 0)
-                return BadRequest(this.errorService.CreateError(ErrorCode.InputDataIsNotValid));
 
             var getCountriesForSearch = new GetCountriesForSearchQuery() { Search = search, Page = page, Size = size };
             var vms = await mediator.Send(getCountriesForSearch);

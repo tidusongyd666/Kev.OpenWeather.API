@@ -58,6 +58,47 @@ namespace Kev.OpenWeather.Test
             var vm = JsonConvert.DeserializeObject<PagedCityiesVm>(result);
             Assert.AreEqual(expectedCount, vm.Count);
         }
+
+        [DataTestMethod]
+        [DataRow("au", -1, 10, 1)]
+        [DataRow("au", 1, -10, 1)]
+        [DataRow("au", -1, -10, 2)]
+        [DataRow("more than ten characters", 1, 10, 1)]
+        public async Task TestSearchCountryiesWithInvalidParams(string search, int page, int size, int expectedCount)
+        {
+
+            using var factory = new WebApplicationFactory<Startup>();
+            var options = factory.Services.GetRequiredService<IOptions<ClientRateLimitOptions>>();
+            string unlimitedClientId = options.Value.ClientWhitelist.FirstOrDefault();
+            var httpClient = factory.CreateClient();
+            httpClient.DefaultRequestHeaders.Add("X_ClientId", unlimitedClientId);
+            var response = await httpClient.GetAsync($"api/v1/getweather/countries?search={search}&page={page}&size={size}");
+            var result = await response.Content.ReadAsStringAsync();
+            var validationError = JsonConvert.DeserializeObject<List<string>>(result);
+            Assert.AreEqual(expectedCount, validationError.Count);
+  
+        }
+
+        [DataTestMethod]
+        [DataRow("brisbane", -1, 10, 1)]
+        [DataRow("brisbane", 1, -10, 1)]
+        [DataRow("brisbane", -1, -10, 2)]
+        public async Task TestSearchCitiesWithInvalidParams(string search, int page, int size, int expectedCount)
+        {
+
+            using var factory = new WebApplicationFactory<Startup>();
+            var options = factory.Services.GetRequiredService<IOptions<ClientRateLimitOptions>>();
+            string unlimitedClientId = options.Value.ClientWhitelist.FirstOrDefault();
+            var httpClient = factory.CreateClient();
+            httpClient.DefaultRequestHeaders.Add("X_ClientId", unlimitedClientId);
+            var response = await httpClient.GetAsync($"api/v1/getweather/cities?search={search}&page={page}&size={size}");
+            var result = await response.Content.ReadAsStringAsync();
+            var validationError = JsonConvert.DeserializeObject<List<string>>(result);
+            Assert.AreEqual(expectedCount, validationError.Count);
+
+        }
+
+
         #endregion
 
         #region getWeather Api and Client RateLimit

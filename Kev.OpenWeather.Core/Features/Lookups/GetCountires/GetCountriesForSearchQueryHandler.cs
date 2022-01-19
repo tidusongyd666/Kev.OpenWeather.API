@@ -13,6 +13,11 @@ namespace Kev.OpenWeather.Core.Features.Lookups.GetCountires
     {
         public async Task<PagedCountriesVm> Handle(GetCountriesForSearchQuery request, CancellationToken cancellationToken)
         {
+            var validator = new GetCountriesForSearchQueryValidator();
+            var validationResult = await validator.ValidateAsync(request);
+            if (validationResult.Errors.Count > 0)
+                throw new Exceptions.ValidationException(validationResult);
+
             List<CountryDto> distinctCountires = ConfigManager.cityLookups.GroupBy(p => p.country).Select(g => new CountryDto() { Country = g.First().country ?? "" }).ToList();
           
             var list = string.IsNullOrEmpty(request.Search) ?
