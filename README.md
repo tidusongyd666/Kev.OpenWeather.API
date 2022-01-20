@@ -14,10 +14,10 @@ This solution contains 3 projects.
   - This one has enabled rate limit 5 times per hour by the X_ClientId in request header
 - Search countries API endpoint: `/api/v1/getweather/countries?search={search}&page={page}&size={size}`  
   - No rate limit
-  - Counties Search support pagination, wildcard search and case insensitive
+  - Counties Search support pagination,country name search and case insensitive
 - Search cities API endpoint: `/api/v1/getweather/cities?search={search}&page={page}&size={size}`  
   - No rate limit
-  - Cities Search support pagination, wildcard search and case insensitive
+  - Cities Search support pagination, city name search and case insensitive
   - Cities and Countires data downloaded form OpenWeather website, for the details please check the [Link](https://bulk.openweathermap.org/sample/)
 - API limited Keys 
   - 5 limited Keys can be used, each key is limited to 5 calls per hour 
@@ -63,6 +63,7 @@ Including below automatic tests
   - MediatR
   - Serilog
   - Swashbuckle.AspNetCore
+  - FluentValidation
 
 
 ## Build & Run 
